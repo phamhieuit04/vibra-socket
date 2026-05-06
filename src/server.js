@@ -1,13 +1,9 @@
-import express from 'express';
-import { createServer } from 'node:http';
+import "dotenv/config";
+import { APP } from "./configs/app.js";
+import { createApp } from "./app.js";
 
-const app = express();
-const server = createServer(app);
+const app = createApp();
 
-app.get('/', (req, res) => {
-  res.send('<h1>Hello world</h1>');
-});
-
-server.listen(3000, () => {
-  console.log('server running at http://localhost:3000');
+app.listen(APP.PORT, () => {
+    console.log("Socket server running on port " + APP.PORT);
 });
