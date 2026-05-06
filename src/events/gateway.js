@@ -1,5 +1,4 @@
 import { Server } from "socket.io";
-import { registerHandler } from "./handler.js";
 
 export const registerGateway = (server) => {
   const io = new Server(server, {
@@ -23,7 +22,5 @@ export const registerGateway = (server) => {
       path: "/socket.io",
   });
 
-  io.on("connection", (socket) => {
-      registerHandler(io, socket);
-  });
+  return io;
  }
