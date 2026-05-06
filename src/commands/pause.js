@@ -1,6 +1,6 @@
-import { getRoom, setState } from "../store/room.js";
+import { getRoom, setState } from "../stores/room.js";
 
-export const pause = ({ userId }) => {
+export const pauseCommand = ({ userId }) => {
   const roomId = `user:${userId}`;
   const room = getRoom(roomId);
 

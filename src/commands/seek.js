@@ -1,6 +1,6 @@
-import { setState } from "../store/room.js";
+import { setState } from "../stores/room.js";
 
-export const seek = ({ userId, positionMs }) => {
+export const seekCommand = ({ userId, positionMs }) => {
   const roomId = `user:${userId}`;
 
   const state = setState(roomId, {
