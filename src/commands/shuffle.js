@@ -1,11 +1,11 @@
 import { setState } from "../stores/room.js";
 
-export const seekCommand = ({ userId, positionMs }) => {
+export const shuffleCommand = ({ userId, isShuffleEnabled }) => {
   const roomId = `room:${userId}`;
 
   const state = setState(roomId, {
     player: {
-      currentPosition: positionMs
+      isShuffleEnabled: Boolean(isShuffleEnabled)
     }
   });
 

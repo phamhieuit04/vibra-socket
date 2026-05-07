@@ -1,16 +1,19 @@
 import { getRoom, setState } from "../stores/room.js";
 
 export const pauseCommand = ({ userId }) => {
-  const roomId = `user:${userId}`;
+  const roomId = `room:${userId}`;
   const room = getRoom(roomId);
 
-  const current =
-    room.state.positionMs +
-    (Date.now() - room.state.timestamp);
+  const elapsed = Date.now() - room.state.timestamp;
+  const current = room.state.player.isPlaying
+    ? room.state.player.currentPosition + elapsed
+    : room.state.player.currentPosition;
 
   const state = setState(roomId, {
-    isPlaying: false,
-    positionMs: current
+    player: {
+      isPlaying: false,
+      currentPosition: current
+    }
   });
 
   return { roomId, state };
