@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 
-export const registerGateway = (server) => {
+export const registerSocket = (server) => {
   const io = new Server(server, {
       cors: {
           origin: "*",
