@@ -24,3 +24,8 @@ export const setState = (roomId, partial) => {
 
   return room.state;
 };
+
+export const countClients = (io, roomId) => {
+  const room = io.sockets.adapter.rooms.get(roomId);
+  return room ? room.size : 0;
+};
