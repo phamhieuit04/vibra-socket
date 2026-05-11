@@ -1,18 +1,21 @@
-import { setState } from "../stores/room.js";
+import { setState, getRoom } from "../stores/room.js";
 
-export const queueCommand = ({ userId, songIds, currentIndex }) => {
+export const queueCommand = ({ userId, songIds }) => {
   const roomId = `room:${userId}`;
 
-  const queue = {};
-  if (Array.isArray(songIds)) {
-    queue.songIds = songIds;
-  }
-  if (typeof currentIndex === "number") {
-    queue.currentIndex = currentIndex;
-  }
+  const room = getRoom(roomId);
+
+  const currentSongIds = room.state.queue.songIds;
+
+  const nextSongIds = [
+    ...currentSongIds,
+    ...songIds
+  ];
 
   const state = setState(roomId, {
-    queue
+    queue: {
+      songIds: nextSongIds
+    }
   });
 
   return { roomId, state };

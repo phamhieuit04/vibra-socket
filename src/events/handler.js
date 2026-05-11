@@ -61,15 +61,16 @@ export const registerHandler = (io, socket) => {
   });
 
   socket.on("queue", (payload) => {
-    const { userId, songIds, currentIndex } = payload || {};
+    const { userId, songIds } = payload || {};
 
     if (!userId) return;
+    if (!Array.isArray(songIds)) return;
 
     const { roomId, state } = queueCommand({
       userId,
-      songIds,
-      currentIndex
+      songIds
     });
+
     io.to(roomId).emit("state", state);
   });
 };
