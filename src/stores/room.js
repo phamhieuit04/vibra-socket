@@ -35,8 +35,7 @@ export const setState = (roomId, partial) => {
     ...room.state,
     ...partial,
     player,
-    queue,
-    timestamp: Date.now()
+    queue
   };
 
   return room.state;

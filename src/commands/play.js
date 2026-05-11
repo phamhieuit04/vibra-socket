@@ -57,7 +57,6 @@ export const playCommand = ({ userId, songId }) => {
       isPlaying: true,
       currentPosition: nextPosition,
 
-      // playback timestamp riêng
       startedAt: Date.now()
     },
 
