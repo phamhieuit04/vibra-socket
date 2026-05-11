@@ -10,12 +10,12 @@ export const getRoom = (roomId) => {
           repeatMode: "OFF",
 
           currentPosition: 0,
+          startedAt: null
         },
         queue: {
           currentIndex: -1,
           songIds: []
-        },
-        timestamp: Date.now()
+        }
       }
     };
   }

@@ -2,7 +2,7 @@ import express from "express";
 import http from "http";
 import { registerSocket } from "./events/socket.js";
 import { registerHandler } from "./events/handler.js";
-import { getRoom } from "./stores/room.js";
+import { getRoom, countClients } from "./stores/room.js";
 
 export const createApp = () => {
   const app = express();
@@ -17,7 +17,8 @@ export const createApp = () => {
     const { userId } = req.params;
     const roomId = `room:${userId}`;
     const room = getRoom(roomId);
-    res.json({ roomId, state: room.state });
+    const count = countClients(io, roomId);
+    res.json({ roomId, clients: count, state: room.state });
   });
 
   return server;

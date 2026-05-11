@@ -31,7 +31,8 @@ export const trackEndedCommand = ({ userId }) => {
     const state = setState(roomId, {
       player: {
         isPlaying: true,
-        currentPosition: 0
+        currentPosition: 0,
+        startedAt: Date.now()
       }
     });
 
@@ -51,7 +52,8 @@ export const trackEndedCommand = ({ userId }) => {
         const state = setState(roomId, {
           player: {
             isPlaying: false,
-            currentPosition: 0
+            currentPosition: 0,
+            startedAt: null
           }
         });
 
@@ -63,7 +65,8 @@ export const trackEndedCommand = ({ userId }) => {
   const state = setState(roomId, {
     player: {
       isPlaying: true,
-      currentPosition: 0
+      currentPosition: 0,
+      startedAt: Date.now()
     },
     queue: {
       currentIndex: nextIndex

@@ -4,15 +4,23 @@ export const pauseCommand = ({ userId }) => {
   const roomId = `room:${userId}`;
   const room = getRoom(roomId);
 
-  const elapsed = Date.now() - room.state.timestamp;
-  const current = room.state.player.isPlaying
-    ? room.state.player.currentPosition + elapsed
-    : room.state.player.currentPosition;
+  let current =
+    room.state.player.currentPosition;
+
+  if (
+    room.state.player.isPlaying &&
+    room.state.player.startedAt
+  ) {
+    current +=
+      Date.now() -
+      room.state.player.startedAt;
+  }
 
   const state = setState(roomId, {
     player: {
       isPlaying: false,
-      currentPosition: current
+      currentPosition: current,
+      startedAt: null
     }
   });
 

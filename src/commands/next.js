@@ -43,7 +43,8 @@ export const nextCommand = ({ userId }) => {
   const state = setState(roomId, {
     player: {
       isPlaying: true,
-      currentPosition: 0
+      currentPosition: 0,
+      startedAt: Date.now()
     },
     queue: {
       currentIndex: nextIndex
