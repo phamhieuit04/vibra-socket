@@ -3,7 +3,10 @@ import { pauseCommand } from "../commands/pause.js";
 import { seekCommand } from "../commands/seek.js";
 import { shuffleCommand } from "../commands/shuffle.js";
 import { repeatCommand } from "../commands/repeat.js";
-import { queueCommand } from "../commands/queue.js";
+import { queueAddCommand } from "../commands/queue.js";
+import { nextCommand } from "../commands/next.js";
+import { previousCommand } from "../commands/previous.js";
+import { trackEndedCommand } from "../commands/trackEnded.js";
 import { countClients } from "../stores/room.js";
 
 export const registerHandler = (io, socket) => {
@@ -60,17 +63,53 @@ export const registerHandler = (io, socket) => {
     io.to(roomId).emit("state", state);
   });
 
-  socket.on("queue", (payload) => {
+  socket.on("queue:add", (payload) => {
     const { userId, songIds } = payload || {};
 
     if (!userId) return;
     if (!Array.isArray(songIds)) return;
 
-    const { roomId, state } = queueCommand({
+    const { roomId, state } = queueAddCommand({
       userId,
       songIds
     });
 
+    io.to(roomId).emit("state", state);
+  });
+
+  socket.on("next", (payload) => {
+    const { userId } = payload || {};
+
+    if (!userId) return;
+
+    const result = nextCommand({ userId });
+    if (!result) return;
+
+    const { roomId, state } = result;
+    io.to(roomId).emit("state", state);
+  });
+
+  socket.on("previous", (payload) => {
+    const { userId } = payload || {};
+
+    if (!userId) return;
+
+    const result = previousCommand({ userId });
+    if (!result) return;
+
+    const { roomId, state } = result;
+    io.to(roomId).emit("state", state);
+  });
+
+  socket.on("trackEnded", (payload) => {
+    const { userId } = payload || {};
+
+    if (!userId) return;
+
+    const result = trackEndedCommand({ userId });
+    if (!result) return;
+
+    const { roomId, state } = result;
     io.to(roomId).emit("state", state);
   });
 };

@@ -1,6 +1,6 @@
 import { setState, getRoom } from "../stores/room.js";
 
-export const queueCommand = ({ userId, songIds }) => {
+export const queueAddCommand = ({ userId, songIds }) => {
   const roomId = `room:${userId}`;
 
   const room = getRoom(roomId);
