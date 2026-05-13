@@ -1,42 +1,60 @@
 import { getRoom, setState } from "../stores/room.js";
-
-const pickRandomIndex = (size, currentIndex) => {
-  if (size <= 1) return currentIndex >= 0 ? currentIndex : 0;
-
-  let nextIndex = currentIndex;
-  while (nextIndex === currentIndex) {
-    nextIndex = Math.floor(Math.random() * size);
-  }
-
-  return nextIndex;
-};
+import { pickRandomIndex, getValidatedCurrentIndex } from "../helpers/util.js";
 
 export const previousCommand = ({ userId }) => {
   const roomId = `room:${userId}`;
   const room = getRoom(roomId);
 
   const queueSize = room.state.queue.songIds.length;
-  if (queueSize === 0) return null;
+
+  if (queueSize === 0) {
+    const state = setState(roomId, {
+      player: {
+        isPlaying: false,
+        currentPosition: 0,
+        startedAt: null
+      },
+      queue: {
+        currentIndex: -1
+      }
+    });
+
+    return { roomId, state };
+  }
 
   const repeatMode = room.state.player.repeatMode;
   const isShuffleEnabled = room.state.player.isShuffleEnabled;
 
-  const currentIndex =
-    room.state.queue.currentIndex >= 0 &&
-    room.state.queue.currentIndex < queueSize
-      ? room.state.queue.currentIndex
-      : 0;
+  const currentIndex = getValidatedCurrentIndex(
+    room.state.queue.currentIndex,
+    queueSize
+  );
 
-  let nextIndex = currentIndex;
+  let previousIndex = currentIndex;
 
-  if (repeatMode === "ONE") {
-    nextIndex = currentIndex;
-  } else if (isShuffleEnabled) {
-    nextIndex = pickRandomIndex(queueSize, currentIndex);
+  if (isShuffleEnabled) {
+    previousIndex = pickRandomIndex(queueSize, currentIndex);
   } else {
-    nextIndex = currentIndex - 1;
-    if (nextIndex < 0) {
-      nextIndex = repeatMode === "ALL" ? queueSize - 1 : currentIndex;
+    previousIndex = currentIndex - 1;
+
+    if (previousIndex < 0) {
+      if (repeatMode === "ALL") {
+        previousIndex = queueSize - 1;
+      }
+      else {
+        const state = setState(roomId, {
+          player: {
+            isPlaying: false,
+            currentPosition: 0,
+            startedAt: null
+          },
+          queue: {
+            currentIndex: currentIndex
+          }
+        });
+
+        return { roomId, state };
+      }
     }
   }
 
@@ -47,7 +65,7 @@ export const previousCommand = ({ userId }) => {
       startedAt: Date.now()
     },
     queue: {
-      currentIndex: nextIndex
+      currentIndex: previousIndex
     }
   });
 

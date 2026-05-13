@@ -7,9 +7,13 @@ export const queueAddCommand = ({ userId, songIds }) => {
 
   const currentSongIds = room.state.queue.songIds;
 
+  const uniqueNewSongIds = songIds.filter(
+    (id) => !currentSongIds.includes(id)
+  );
+
   const nextSongIds = [
     ...currentSongIds,
-    ...songIds
+    ...uniqueNewSongIds
   ];
 
   const state = setState(roomId, {
