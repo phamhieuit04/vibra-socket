@@ -7,12 +7,18 @@ import { queueAddCommand } from "../commands/queue.js";
 import { nextCommand } from "../commands/next.js";
 import { previousCommand } from "../commands/previous.js";
 import { trackEndedCommand } from "../commands/trackEnded.js";
+import { joinCommand } from "../commands/join.js";
 import { countClients } from "../stores/room.js";
 
 export const registerHandler = (io, socket) => {
   socket.on("join", ({ userId }) => {
     const roomId = `room:${userId}`;
     socket.join(roomId);
+
+    if (userId) {
+      const { state } = joinCommand({ userId });
+      socket.emit("state", state);
+    }
 
     console.log(``);
     console.log(`Joined ${roomId}`);
