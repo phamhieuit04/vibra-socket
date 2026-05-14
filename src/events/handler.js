@@ -3,7 +3,7 @@ import { pauseCommand } from "../commands/pause.js";
 import { seekCommand } from "../commands/seek.js";
 import { shuffleCommand } from "../commands/shuffle.js";
 import { repeatCommand } from "../commands/repeat.js";
-import { queueAddCommand } from "../commands/queue.js";
+import { queueAddCommand, queueRemoveCommand } from "../commands/queue.js";
 import { nextCommand } from "../commands/next.js";
 import { previousCommand } from "../commands/previous.js";
 import { trackEndedCommand } from "../commands/trackEnded.js";
@@ -82,6 +82,20 @@ export const registerHandler = (io, socket) => {
 
     io.to(roomId).emit("state", state);
   });
+
+  socket.on("queue:remove", (payload) => {
+    const {userId, songIds} = payload || {};
+
+    if (!userId) return;
+    if (!Array.isArray(songIds)) return;
+
+    const {roomId, state} = queueRemoveCommand({
+      userId,
+      songIds
+    });
+
+    io.to(roomId).emit("state", state);
+  })
 
   socket.on("next", (payload) => {
     const { userId } = payload || {};
