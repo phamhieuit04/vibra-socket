@@ -12,13 +12,14 @@ import { countClients } from "../stores/room.js";
 
 export const registerHandler = (io, socket) => {
   socket.on("join", ({ userId }) => {
+
+    const roomId = `room:${userId}`;
+    socket.join(roomId);
+    
     if (userId) {
       const { state } = joinCommand({ userId });
       socket.emit("state", state);
     }
-
-    const roomId = `room:${userId}`;
-    socket.join(roomId);
 
     console.log(``);
     console.log(`Joined ${roomId}`);
